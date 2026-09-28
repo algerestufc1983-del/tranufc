@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>استبيان تنظيم خطوط النقل الجامعي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green-dark:#0b3d2e;
+    --green:#125c40;
+    --green-light:#1c7a52;
+    --gold:#c9a34e;
+    --gold-light:#e7cd8a;
+    --bg:#f7f5ef;
+    --card:#ffffff;
+    --text:#1c2b24;
+    --muted:#6b7a72;
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0e1712; --card:#152420; --text:#eef1ee; --muted:#a9b6ae;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0e1712; --card:#152420; --text:#eef1ee; --muted:#a9b6ae;
+  }
+  html{scroll-padding-top:env(safe-area-inset-top,0px);}
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100%; background:var(--bg); color:var(--text);
+    font-family:'Tajawal', 'Segoe UI', Tahoma, sans-serif;
+    display:flex; justify-content:center; padding:28px 16px 60px;
+  }
+  .wrap{width:100%; max-width:520px;}
+  header{
+    background:linear-gradient(135deg,var(--green-dark),var(--green));
+    border-radius:18px; padding:26px 22px; color:#fdfbf5;
+    box-shadow:0 10px 26px rgba(11,61,46,0.25);
+    position:relative; overflow:hidden;
+  }
+  header::after{
+    content:""; position:absolute; inset:auto -30px -40px auto;
+    width:140px; height:140px; border-radius:50%;
+    background:radial-gradient(circle, var(--gold-light) 0%, transparent 70%);
+    opacity:.35;
+  }
+  header h1{margin:0 0 6px; font-size:1.35rem; font-weight:900;}
+  header p{margin:0; font-size:.92rem; color:var(--gold-light); line-height:1.7;}
+  .card{
+    background:var(--card); border-radius:16px; padding:22px;
+    margin-top:16px; box-shadow:0 4px 18px rgba(0,0,0,0.06);
+    border:1px solid rgba(201,163,78,0.18);
+  }
+  label{display:block; font-weight:700; font-size:.92rem; margin:0 0 8px; color:var(--text);}
+  .field{margin-bottom:18px;}
+  input, select{
+    width:100%; padding:12px 14px; border-radius:10px;
+    border:1.5px solid rgba(18,92,64,0.25); background:transparent;
+    color:var(--text); font-family:inherit; font-size:1rem;
+    transition:border-color .15s;
+  }
+  input:focus, select:focus{outline:none; border-color:var(--gold);}
+  .hint{font-size:.78rem; color:var(--muted); margin-top:6px;}
+  button{
+    width:100%; padding:14px; border:none; border-radius:12px;
+    background:linear-gradient(135deg,var(--gold),#b8923f); color:#20180a;
+    font-family:inherit; font-weight:900; font-size:1rem; cursor:pointer;
+    margin-top:6px;
+  }
+  button:active{transform:scale(.99);}
+  button:disabled{opacity:.6; cursor:default;}
+  .note{
+    font-size:.78rem; color:var(--muted); text-align:center; margin-top:14px; line-height:1.6;
+  }
+  .status{
+    display:none; border-radius:12px; padding:16px; margin-top:16px; font-size:.9rem; line-height:1.8;
+  }
+  .status.show{display:block;}
+  .status.ok{background:rgba(18,92,64,0.1); border:1px solid var(--green-light); color:var(--green-dark);}
+  :root[data-theme="dark"] .status.ok, @media (prefers-color-scheme: dark){ .status.ok{color:#bfe8d3;} }
+  .status.err{background:rgba(180,60,40,0.08); border:1px solid #b4432866; color:#8a3320;}
+  .status a.wa{
+    display:inline-block; margin-top:10px; background:#1c7a52; color:#fff;
+    padding:10px 16px; border-radius:10px; text-decoration:none; font-weight:700;
+  }
+  footer{text-align:center; margin-top:22px; font-size:.75rem; color:var(--muted);}
+  .admin-link{
+    display:block; text-align:center; margin-top:18px; font-size:.8rem;
+    color:var(--muted); text-decoration:underline; cursor:pointer; background:none; border:none;
+    width:100%; font-family:inherit;
+  }
+  .overlay{
+    display:none; position:fixed; inset:0; background:rgba(11,23,18,0.55);
+    align-items:center; justify-content:center; padding:20px; z-index:50;
+  }
+  .overlay.show{display:flex;}
+  .modal{
+    background:var(--card); border-radius:16px; padding:22px; width:100%; max-width:380px;
+    box-shadow:0 12px 30px rgba(0,0,0,0.25);
+  }
+  .modal h2{margin:0 0 14px; font-size:1.05rem;}
+  .modal input{margin-bottom:12px;}
+  .modal-actions{display:flex; gap:10px;}
+  .modal-actions button{margin-top:0;}
+  .btn-secondary{background:transparent !important; border:1.5px solid rgba(18,92,64,0.3) !important; color:var(--text) !important;}
+  .modal .err-msg{color:#b43a20; font-size:.82rem; margin:-6px 0 10px; display:none;}
+  .modal .err-msg.show{display:block;}
+  #resultsBody table{width:100%; border-collapse:collapse; font-size:.85rem;}
+  #resultsBody th, #resultsBody td{
+    border:1px solid rgba(18,92,64,0.2); padding:8px 10px; text-align:right;
+  }
+  #resultsBody th{background:rgba(18,92,64,0.08); font-weight:700;}
+  #resultsBody .empty-msg{color:var(--muted); font-size:.88rem; text-align:center; padding:14px 0;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>استبيان تنظيم خطوط النقل الجامعي على مستوى المركز</h1>
+    <p>يُستخدم هذا الاستبيان لتنظيم خطوط النقل الجامعي على مستوى المركز. يرجى تعبئة بياناتك بدقة.</p>
+  </header>
+
+  <div class="card">
+    <form id="surveyForm">
+      <div class="field">
+        <label for="fullname">الاسم واللقب</label>
+        <input type="text" id="fullname" name="fullname" placeholder="مثال: أحمد بن علي" required>
+      </div>
+      <div class="field">
+        <label for="center">اسم المركز</label>
+        <input type="text" id="center" name="center" placeholder="مثال: مركز الجزائر الشرق" required>
+      </div>
+      <div class="field">
+        <label for="specialty">التخصص</label>
+        <input type="text" id="specialty" name="specialty" placeholder="مثال: علوم اقتصادية" required>
+      </div>
+      <div class="field">
+        <label for="residence">مكان الإقامة</label>
+        <input type="text" id="residence" name="residence" placeholder="مثال: باب الزوار" required>
+        <div class="hint">يُستخدم لتحديد خط النقل الجامعي المعني.</div>
+      </div>
+      <button type="submit" id="submitBtn">إرسال</button>
+    </form>
+    <div class="status" id="status"></div>
+  </div>
+
+  <footer>مركز الجزائر الشرق — Centre d'Alger Est</footer>
+</div>
+
+<script>
+const form = document.getElementById('surveyForm');
+const statusEl = document.getElementById('status');
+const submitBtn = document.getElementById('submitBtn');
+const ADMIN_WA = ""; // اختياري: رقم واتساب المسؤول بصيغة دولية بدون + أو 00، مثال "213555000000"
+
+function showStatus(html, cls){
+  statusEl.className = 'status show ' + cls;
+  statusEl.innerHTML = html;
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'جاري الإرسال...';
+
+  const data = {
+    fullname: document.getElementById('fullname').value.trim(),
+    center: document.getElementById('center').value.trim(),
+    specialty: document.getElementById('specialty').value.trim(),
+    residence: document.getElementById('residence').value.trim(),
+    submittedAt: new Date().toISOString()
+  };
+
+  let saved = false;
+  try {
+    const db = await window.claude?.use ? await window.claude.use('db') : null;
+    if (db) {
+      await db.collection('transport_survey_responses').add(data);
+      saved = true;
+    }
+  } catch (err) {
+    saved = false;
+  }
+
+  if (saved) {
+    showStatus('تم إرسال بياناتك بنجاح، شكراً لمشاركتك.', 'ok');
+    form.reset();
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'إرسال';
+  } else {
+    const text = encodeURIComponent(
+      `استبيان تنظيم خطوط النقل الجامعي\nالاسم واللقب: ${data.fullname}\nاسم المركز: ${data.center}\nالتخصص: ${data.specialty}\nمكان الإقامة: ${data.residence}`
+    );
+    const waLink = ADMIN_WA
+      ? `https://wa.me/${ADMIN_WA}?text=${text}`
+      : `https://wa.me/?text=${text}`;
+    showStatus(
+      'تعذّر الإرسال التلقائي. يمكنك إرسال بياناتك مباشرة عبر واتساب بالضغط على الزر أدناه.' +
+      `<br><a class="wa" href="${waLink}" target="_blank" rel="noopener">إرسال عبر واتساب</a>`,
+      'err'
+    );
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'إرسال';
+  }
+});
+</script>
+</body>
+</html>
